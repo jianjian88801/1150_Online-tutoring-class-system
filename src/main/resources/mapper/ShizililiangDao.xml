@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dao.ShizililiangDao">
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        a.id as id
+        ,a.shizililiang_name as shizililiangName
+        ,a.shizililiang_xuexiao as shizililiangXuexiao
+        ,a.jiaoxuenianxian as jiaoxuenianxian
+        ,a.shanchangkecheng as shanchangkecheng
+        ,a.shizililiang_photo as shizililiangPhoto
+        ,a.sex_types as sexTypes
+        ,a.shizililiang_content as shizililiangContent
+        ,a.create_time as createTime
+    </sql>
+    <select id="selectListView" parameterType="map" resultType="com.entity.view.ShizililiangView" >
+        SELECT
+        <include refid="Base_Column_List" />
+
+--         级联表的字段
+
+        FROM shizililiang  a
+
+        <where>
+            <if test="params.ids != null">
+                and a.id in
+                <foreach item="item" index="index" collection="params.ids" open="(" separator="," close=")">
+                #{item}
+                </foreach>
+            </if>
+            <if test=" params.shizililiangName != '' and params.shizililiangName != null and params.shizililiangName != 'null' ">
+                and a.shizililiang_name like CONCAT('%',#{params.shizililiangName},'%')
+            </if>
+            <if test=" params.shizililiangXuexiao != '' and params.shizililiangXuexiao != null and params.shizililiangXuexiao != 'null' ">
+                and a.shizililiang_xuexiao like CONCAT('%',#{params.shizililiangXuexiao},'%')
+            </if>
+            <if test=" params.jiaoxuenianxian != '' and params.jiaoxuenianxian != null and params.jiaoxuenianxian != 'null' ">
+                and a.jiaoxuenianxian like CONCAT('%',#{params.jiaoxuenianxian},'%')
+            </if>
+            <if test=" params.shanchangkecheng != '' and params.shanchangkecheng != null and params.shanchangkecheng != 'null' ">
+                and a.shanchangkecheng like CONCAT('%',#{params.shanchangkecheng},'%')
+            </if>
+            <if test="params.sexTypes != null and params.sexTypes != ''">
+                and a.sex_types = #{params.sexTypes}
+            </if>
+            <if test=" params.shizililiangContent != '' and params.shizililiangContent != null and params.shizililiangContent != 'null' ">
+                and a.shizililiang_content like CONCAT('%',#{params.shizililiangContent},'%')
+            </if>
+
+        </where>
+
+        order by a.${params.orderBy} desc 
+    </select>
+
+</mapper>
